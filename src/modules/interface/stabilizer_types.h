@@ -52,9 +52,22 @@ struct vec3_s {
   float z;
 };
 
+
+
 typedef struct vec3_s point_t;
 typedef struct vec3_s velocity_t;
 typedef struct vec3_s acc_t;
+
+/* direct motor control values as struct */
+typedef struct motorControl_s {
+  uint32_t timestamp; // Timestamp when the data was computed
+
+  float topRight;
+  float topLeft;
+  float bottomRight;
+  float bottomLeft;
+} motorControl_t;
+
 
 /* Orientation as a quaternion */
 typedef struct quaternion_s {
@@ -168,6 +181,7 @@ typedef struct setpoint_s {
   point_t position;
   velocity_t velocity;
   bool velocity_body;
+  motorControl_t motorControl;
 
   struct {
     stab_mode_t x;
