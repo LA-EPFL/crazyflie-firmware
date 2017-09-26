@@ -58,7 +58,7 @@ typedef struct vec3_s point_t;
 typedef struct vec3_s velocity_t;
 typedef struct vec3_s acc_t;
 
-/* x,y,z vector */
+/* direct motor control values as struct */
 typedef struct motorControl_s {
   uint32_t timestamp; // Timestamp when the data was computed
 
