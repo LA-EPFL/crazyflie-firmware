@@ -67,6 +67,7 @@ enum packet_type {
   cppmEmuType       = 3,
   altHoldType       = 4,
   hoverType         = 5,
+  directMotorControlType = 6,
 };
 
 /* ---===== 2 - Decoding functions =====--- */
@@ -292,6 +293,29 @@ static void hoverDecoder(setpoint_t *setpoint, uint8_t type, const void *data, s
   setpoint->velocity_body = true;
 }
 
+
+/* directMotorControlDecoder
+ *
+ */
+struct directMotorControlPacket_s {
+  float topRight;           // m/s in the body frame of reference
+  float topLeft;           // ...
+  float bottomRight;      // deg/s
+  float bottomLeft;    // m in the world frame of reference
+} __attribute__((packed));
+static void directMotorControlDecoder(setpoint_t *setpoint, uint8_t type, const void *data, size_t datalen)
+{
+  const struct directMotorControlPacket_s *values = data;
+
+  ASSERT(datalen == sizeof(struct directMotorControlPacket_s));
+
+  setpoint->motorControl.topRight = values->topRight;
+  setpoint->motorControl.topLeft = values->topLeft;
+  setpoint->motorControl.bottomRight = values->bottomRight;
+  setpoint->motorControl.bottomLeft = values->bottomLeft;
+
+}
+
  /* ---===== 3 - packetDecoders array =====--- */
 const static packetDecoder_t packetDecoders[] = {
   [stopType]          = stopDecoder,
@@ -300,6 +324,7 @@ const static packetDecoder_t packetDecoders[] = {
   [cppmEmuType]       = cppmEmuDecoder,
   [altHoldType]       = altHoldDecoder,
   [hoverType]         = hoverDecoder,
+  [directMotorControlType] = directMotorControlDecoder,
 };
 
 /* Decoder switch */
