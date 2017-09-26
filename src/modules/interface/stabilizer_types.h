@@ -146,6 +146,13 @@ typedef struct control_s {
   float thrust;
 } control_t;
 
+typedef struct motorPowerPercent_s {
+  float m1;
+  float m2;
+  float m3;
+  float m4;  
+} motorPowerPercent_t;
+
 typedef enum mode_e {
   modeDisable = 0,
   modeAbs,

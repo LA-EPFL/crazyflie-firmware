@@ -53,6 +53,8 @@ static setpoint_t setpoint;
 static sensorData_t sensorData;
 static state_t state;
 static control_t control;
+static motorPowerPercent_t motorpercent;
+
 
 static void stabilizerTask(void* param);
 
@@ -131,14 +133,20 @@ static void stabilizerTask(void* param)
 
     sitAwUpdateSetpoint(&setpoint, &sensorData, &state);
 
-    stateController(&control, &setpoint, &sensorData, &state, tick);
+    // stateController(&control, &setpoint, &sensorData, &state, tick);
 
     checkEmergencyStopTimeout();
+
+    motorpercent.m1 = state.attitude.roll / 100.0f;
+    motorpercent.m2 = -state.attitude.roll / 100.0f;
+    motorpercent.m3 = 0.0f;
+    motorpercent.m4 = 0.0f;
 
     if (emergencyStop) {
       powerStop();
     } else {
-      powerDistribution(&control);
+      // powerDistribution(&control);
+      powerSetPower(&motorpercent);
     }
 
     tick++;
@@ -160,6 +168,14 @@ void stabilizerSetEmergencyStopTimeout(int timeout)
   emergencyStop = false;
   emergencyStopTimeout = timeout;
 }
+
+LOG_GROUP_START(motorpercent)
+LOG_ADD(LOG_FLOAT, m1, &motorpercent.m1)
+LOG_ADD(LOG_FLOAT, m2, &motorpercent.m2)
+LOG_ADD(LOG_FLOAT, m3, &motorpercent.m3)
+LOG_ADD(LOG_FLOAT, m4, &motorpercent.m4)
+LOG_GROUP_STOP(motorpercent)
+
 
 LOG_GROUP_START(ctrltarget)
 LOG_ADD(LOG_FLOAT, roll, &setpoint.attitude.roll)

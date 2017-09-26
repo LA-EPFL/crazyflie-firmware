@@ -33,5 +33,6 @@ bool powerDistributionTest(void);
 void powerDistribution(const control_t *control);
 void powerStop();
 
+void powerSetPower(const motorPowerPercent_t *motorpercent);
 
 #endif //__POWER_DISTRIBUTION_H__

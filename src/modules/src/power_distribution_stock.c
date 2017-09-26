@@ -107,13 +107,26 @@ void powerDistribution(const control_t *control)
   }
 }
 
+void powerSetPower(const motorPowerPercent_t *motorpercent)
+{
+  motorPower.m1 = limitThrust((motorpercent->m1 * 65536));
+  motorPower.m2 = limitThrust((motorpercent->m2 * 65536));
+  motorPower.m3 = limitThrust((motorpercent->m3 * 65536));
+  motorPower.m4 = limitThrust((motorpercent->m4 * 65536));
+
+  motorsSetRatio(MOTOR_M1, motorPower.m1);
+  motorsSetRatio(MOTOR_M2, motorPower.m2);
+  motorsSetRatio(MOTOR_M3, motorPower.m3);
+  motorsSetRatio(MOTOR_M4, motorPower.m4);
+}
+
 PARAM_GROUP_START(motorPowerSet)
 PARAM_ADD(PARAM_UINT8, enable, &motorSetEnable)
 PARAM_ADD(PARAM_UINT16, m1, &motorPowerSet.m1)
 PARAM_ADD(PARAM_UINT16, m2, &motorPowerSet.m2)
 PARAM_ADD(PARAM_UINT16, m3, &motorPowerSet.m3)
 PARAM_ADD(PARAM_UINT16, m4, &motorPowerSet.m4)
-PARAM_GROUP_STOP(ring)
+PARAM_GROUP_STOP(motorPowerSet)
 
 LOG_GROUP_START(motor)
 LOG_ADD(LOG_INT32, m4, &motorPower.m4)
